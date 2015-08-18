@@ -8,12 +8,22 @@
 
 #include <stddef.h>
 #include "bipartiteGraph.h"
+#include "memoryUtil.h"
+#include "list.h"
+
 
 
 struct implBipartGraph_t
 {
-	/* TODO: Implement me! */
+	int vertNumP1;
+	int vertNump2;
+
+	linkedList_t * vertsP1;
+	linkedList_t * vertsP2;	
+	
+		
 };
+
 
 
 
@@ -23,16 +33,29 @@ struct implBipartGraph_t
 
 bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
-	/* TODO: Implement me! */
+	
+	bpGraph_t * pGraph = safemalloc(sizeof(bpGraph_t));
+	pGraph->vertNumP1 = part1VertNum;
+	pGraph->vertNumP2 = part2VertNum;
+	init_list(pGraph->vertNumP1);
+	init_list(pGraph->vertNumP2);
 
-	/* TODO: Replace placeholder. */
-	return NULL;
-} /* end of bipartGraphDestroy() */
+	
+	return pGraph;
+} /* end of bipartGraphCreate() */
 
 
 void bipartGraphDestroy(bpGraph_t* pGraph)
 {
 	/* TODO: Implement me! */
+	int i;
+	linkedList_t * curr;
+	
+	free_list(pGraph->vertsP1);
+	free_list(pGraph->vertsP2);
+	safeFree(pGraph, sizeof(bpGraph_t));
+	
+
 } /* end of bipartGraphDestroy() */
 
 
