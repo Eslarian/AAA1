@@ -10,6 +10,11 @@ typedef enum truefalse
 	FALSE, TRUE
 } BOOLEAN;
 
+typedef enum findorsearch
+{
+	EXISTS, FIND
+} RET_VAL;
+
 struct list
 {
 	struct node * head;

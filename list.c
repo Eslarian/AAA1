@@ -83,6 +83,12 @@ void free_list(struct list * list)
 	} 
 } 
 
+/*Initially, this function didn't exist as part of my generic implementation. 
+My free function wasn't prepared for data that contains a linkedlist, and I 
+presume there are also other types of data that I won't be able to safely 
+"free" without memory leaks. In future, to completely make this linked list 
+implementation generic, it would require more function pointers for each function*/
+
 void free_edgelist(struct list * list)
 {
 	struct node * curr = NULL;
@@ -100,15 +106,26 @@ void free_edgelist(struct list * list)
 int search(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
 {
 	struct node * searchnode;
-	int result;	
+	int result = 1;	
 	searchnode = list->head;
 
-	while(searchnode || result != 0)
+	while(searchnode)
 	{
-
+		if((result=func(searchnode,comparator)) == 0)
+			break;
 		searchnode=searchnode->next;
-		result=func(searchnode,comparator);
+
 	} 
 	
 	return result;
 }
+
+struct node * find(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
+{
+	struct node * searchnode;
+	searchnode=searchnode->next;
+
+	while(searchnode)
+	{
+		if(func(searchnode,comparator) == 0) 
+		return searchnode

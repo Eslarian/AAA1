@@ -67,12 +67,24 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
 	int i;
 
+	/*Allocating space for the bipartGraph, assigning values and initializing vertices lists*/
 	bpGraph_t * pGraph = safeMalloc(sizeof(bpGraph_t));
 	pGraph->vertNumP1 = part1VertNum;
 	pGraph->vertNumP2 = part2VertNum;
 	pGraph->vertsP1 = init_list();
 	pGraph->vertsP2 = init_list();
+
+	/*Creating vertices nodes up until the VertNum values*/
+	for(i = 0; i < part1VertNum;i++)
+	{
+		bipartGraphInsertVertex(pGraph, i, 1);
+	} 
 	
+	for(i = 0; i < part2VertNum;i++)
+	{
+		bipartGraphInsertVertex(pGraph, i, 2);
+	} 
+
 
 	
 	return pGraph;
@@ -81,6 +93,8 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 
 void bipartGraphDestroy(bpGraph_t* pGraph)
 {
+	
+	/*FIXME this needs refactoring so that it actually frees properly*/
 	
 	free_list(pGraph->vertsP1);
 	free_list(pGraph->vertsP2);
@@ -96,12 +110,14 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 
 	if(partite == 1) 
 	{	
+		/*Checking if the vertex exists already*/
 		if(search(pGraph->vertsP1,&vertId,numComp) == 0) 
 		{	
 			return EXISTING_VERTEX;
 		} 
 		else 
 		{	
+			/*Creating data struct and adding vertex node*/
 			newData = safeMalloc(sizeof(struct vertData)); 
 			newData->vertId = vertId;
 			newData->edgeList = init_list(); 
@@ -112,12 +128,14 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 	} 
 	else if(partite == 2) 
 	{
+		/*Checking if the vertex exists already*/
 		if(search(pGraph->vertsP2,&vertId,numComp) == 0) 
 		{ 
 			return EXISTING_VERTEX;
 		} 
 		else
 		{
+			/*Creating data struct and adding vertex node*/
 			newData = safeMalloc(sizeof(struct vertData)); 
 			newData->vertId = vertId;
 			newData->edgeList = init_list(); 
@@ -140,14 +158,17 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 	if(srcPartite == 1)
 	{
 		searchnode = pGraph->vertsP1->head;
+		/*Searching through the vertex list to find where to insert the edge node, or if the edge exists already*/
 		while(searchnode)
 		{
 			castData = searchnode->data;
-			if(search(castData->edgeList,&tarVertId,numComp) == 1)
+			/*Checking if the edge exists already*/
+			if(search(castData->edgeList,&tarVertId,numComp) == 0)
 			return EXISTING_EDGE; 		
 			
 			if(castData->vertId == srcVertId) 
 			{
+				/*Inserting new edge node*/
 				newData = safeMalloc(sizeof(struct edgeData));
 				newData->tarVertId = tarVertId;
 				newData->srcVertId = srcVertId; 
@@ -159,14 +180,17 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 	else if(srcPartite == 2) 
 	{
 		searchnode = pGraph->vertsP2->head;
+		/*Searching through the vertex list to find where to insert the edge node, or if the edge exists already*/
 		while(searchnode)
 		{
 			castData = searchnode->data;
-			if(search(castData->edgeList,&tarVertId,numComp) == 1)
+			/*Checking if the edge exists already*/
+			if(search(castData->edgeList,&tarVertId,numComp) == 0)
 			return EXISTING_EDGE;
 
 			if(castData->vertId == srcVertId)
 			{
+				/*Inserting new edge node*/
 				newData = safeMalloc(sizeof(struct edgeData));
 				newData->tarVertId = tarVertId;
 				newData->srcVertId = srcVertId; 
@@ -183,7 +207,9 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 {
 	/* TODO: Implement me! */
-
+	if(partite == 1)
+	{
+		
 
 	/* TODO: Replace placeholder. */
 	return 0;
