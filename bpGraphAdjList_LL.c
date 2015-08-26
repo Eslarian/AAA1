@@ -9,8 +9,8 @@
 #include "bipartiteGraph.h"
 #include "memoryUtil.h"
 #include "list.h"
-#include "commondefs.h"
-
+#include "commonDefs.h"
+#define INVALID_COMP 3
 
 struct implBipartGraph_t
 {
@@ -37,22 +37,25 @@ struct edgeData
 int numComp(struct node * vertNode, void * val)
 {
 	struct vertData * vData;
-	int num;
+	int * num;
 	
-	num = (int)*val;
+	num = val;
 	vData  = vertNode->data;
-	if(vData->vertId > num)
+	if(vData->vertId > *num)
 	{	
 		return 1;
 	} 
-	if(vData->vertId < num)
+	if(vData->vertId < *num)
 	{
 		return -1;
 	} 
-	if(vData->vertId == num) 
+	if(vData->vertId == *num) 
 	{
 		return 0;
 	}
+	
+	return INVALID_COMP;
+
 } 
 
 
@@ -62,12 +65,15 @@ int numComp(struct node * vertNode, void * val)
 
 bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
-	
+	int i;
+
 	bpGraph_t * pGraph = safeMalloc(sizeof(bpGraph_t));
 	pGraph->vertNumP1 = part1VertNum;
 	pGraph->vertNumP2 = part2VertNum;
 	pGraph->vertsP1 = init_list();
 	pGraph->vertsP2 = init_list();
+	
+
 	
 	return pGraph;
 } /* end of bipartGraphCreate() */
@@ -96,11 +102,11 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 		} 
 		else 
 		{	
-			newData = malloc(sizeof(struct vertData)); 
+			newData = safeMalloc(sizeof(struct vertData)); 
 			newData->vertId = vertId;
 			newData->edgeList = init_list(); 
 			add_node(pGraph->vertsP1,newData);
-			return NEW_VERTEX;
+			return NEW_VERTEX
 
 		} 
 	} 
@@ -112,7 +118,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 		} 
 		else
 		{
-			newData = malloc(sizeof(struct vertData)); 
+			newData = safeMalloc(sizeof(struct vertData)); 
 			newData->vertId = vertId;
 			newData->edgeList = init_list(); 
 			add_node(pGraph->vertsP2,newData);
@@ -127,10 +133,9 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 
 int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int srcPartite)
 {
-	/* TODO: Implement me! */
-	struct vertNode * searchnode;
-	struct vertData * castData;
-	struct edgeData * newData;
+	struct node * searchnode = NULL;
+	struct vertData * castData = NULL;
+	struct edgeData * newData = NULL;
 
 	if(srcPartite == 1)
 	{
@@ -143,7 +148,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 			
 			if(castData->vertId == srcVertId) 
 			{
-				newData = malloc(sizeof(struct edgedata));
+				newData = safeMalloc(sizeof(struct edgeData));
 				newData->tarVertId = tarVertId;
 				newData->srcVertId = srcVertId; 
 				add_node(castData->edgeList,newData);
@@ -162,7 +167,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 
 			if(castData->vertId == srcVertId)
 			{
-				newData = malloc(sizeof(struct edgedata));
+				newData = safeMalloc(sizeof(struct edgeData));
 				newData->tarVertId = tarVertId;
 				newData->srcVertId = srcVertId; 
 				add_node(castData->edgeList,newData);

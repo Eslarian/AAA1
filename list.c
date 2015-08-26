@@ -4,6 +4,8 @@ list.c
 */
 
 #include "list.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
 struct list * init_list(void)
@@ -101,7 +103,7 @@ int search(struct list * list, void * comparator, int (*func)(struct node * node
 	int result;	
 	searchnode = list->head;
 
-	while(searchnode || result != 1)
+	while(searchnode || result != 0)
 	{
 
 		searchnode=searchnode->next;
