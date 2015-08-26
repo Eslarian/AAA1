@@ -29,5 +29,4 @@ BOOLEAN add_node(struct list * list, void * data);
 BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list);
 void free_edgelist(struct list * list);
 void free_list(struct list * list);
-int search(struct list * list, char * string, int (*func)(struct node * node, char * string));
-
+int search(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator));

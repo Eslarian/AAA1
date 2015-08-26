@@ -95,19 +95,18 @@ void free_edgelist(struct list * list)
 	} 
 
 } 
-int search(struct list * list, char * string, int (*func)(struct node * node, char * string))
+int search(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
 {
 	struct node * searchnode;
 	int result;	
 	searchnode = list->head;
 
-	while(!searchnode || result != 1)
+	while(searchnode || result != 1)
 	{
 
 		searchnode=searchnode->next;
-		result=func(searchnode,string);
+		result=func(searchnode,comparator);
 	} 
 	
 	return result;
 }
-

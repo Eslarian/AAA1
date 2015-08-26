@@ -5,26 +5,55 @@
  *      Author: Jeffrey Chan
  */
 
-
 #include <stddef.h>
 #include "bipartiteGraph.h"
 #include "memoryUtil.h"
 #include "list.h"
-
+#include "commondefs.h"
 
 
 struct implBipartGraph_t
 {
 	int vertNumP1;
-	int vertNump2;
+	int vertNumP2;
 
-	linkedList_t * vertsP1;
-	linkedList_t * vertsP2;	
+	struct list * vertsP1;
+	struct list * vertsP2;	
 	
-		
 };
 
+struct vertData
+{
+	int vertId;
+	struct list * edgeList;
+}; 
 
+struct edgeData
+{
+	int tarVertId;
+	int srcVertId;
+}; 
+
+int numComp(struct node * vertNode, void * val)
+{
+	struct vertData * vData;
+	int num;
+	
+	num = (int)*val;
+	vData  = vertNode->data;
+	if(vData->vertId > num)
+	{	
+		return 1;
+	} 
+	if(vData->vertId < num)
+	{
+		return -1;
+	} 
+	if(vData->vertId == num) 
+	{
+		return 0;
+	}
+} 
 
 
 /* ************************************************************************* */
@@ -34,12 +63,11 @@ struct implBipartGraph_t
 bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
 	
-	bpGraph_t * pGraph = safemalloc(sizeof(bpGraph_t));
+	bpGraph_t * pGraph = safeMalloc(sizeof(bpGraph_t));
 	pGraph->vertNumP1 = part1VertNum;
 	pGraph->vertNumP2 = part2VertNum;
-	init_list(pGraph->vertNumP1);
-	init_list(pGraph->vertNumP2);
-
+	pGraph->vertsP1 = init_list();
+	pGraph->vertsP2 = init_list();
 	
 	return pGraph;
 } /* end of bipartGraphCreate() */
@@ -47,9 +75,6 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 
 void bipartGraphDestroy(bpGraph_t* pGraph)
 {
-	/* TODO: Implement me! */
-	int i;
-	linkedList_t * curr;
 	
 	free_list(pGraph->vertsP1);
 	free_list(pGraph->vertsP2);
@@ -61,25 +86,99 @@ void bipartGraphDestroy(bpGraph_t* pGraph)
 
 int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 {
-	/* TODO: Implement me! */
+	struct vertData * newData = NULL;
 
-	/* TODO: Replace placeholder. */
-	return 0;
+	if(partite == 1) 
+	{	
+		if(search(pGraph->vertsP1,&vertId,numComp) == 0) 
+		{	
+			return EXISTING_VERTEX;
+		} 
+		else 
+		{	
+			newData = malloc(sizeof(struct vertData)); 
+			newData->vertId = vertId;
+			newData->edgeList = init_list(); 
+			add_node(pGraph->vertsP1,newData);
+			return NEW_VERTEX;
+
+		} 
+	} 
+	else if(partite == 2) 
+	{
+		if(search(pGraph->vertsP2,&vertId,numComp) == 0) 
+		{ 
+			return EXISTING_VERTEX;
+		} 
+		else
+		{
+			newData = malloc(sizeof(struct vertData)); 
+			newData->vertId = vertId;
+			newData->edgeList = init_list(); 
+			add_node(pGraph->vertsP2,newData);
+			return NEW_VERTEX;
+		} 
+	} 
+		
+ 	return ERROR_VALUE;
+	
 } /* end of bipartGraphInsertVertex() */
 
 
 int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int srcPartite)
 {
 	/* TODO: Implement me! */
+	struct vertNode * searchnode;
+	struct vertData * castData;
+	struct edgeData * newData;
 
-	/* TODO: Replace placeholder. */
-	return 0;
+	if(srcPartite == 1)
+	{
+		searchnode = pGraph->vertsP1->head;
+		while(searchnode)
+		{
+			castData = searchnode->data;
+			if(search(castData->edgeList,&tarVertId,numComp) == 1)
+			return EXISTING_EDGE; 		
+			
+			if(castData->vertId == srcVertId) 
+			{
+				newData = malloc(sizeof(struct edgedata));
+				newData->tarVertId = tarVertId;
+				newData->srcVertId = srcVertId; 
+				add_node(castData->edgeList,newData);
+				return NEW_EDGE;
+			} 
+		}
+	} 
+	else if(srcPartite == 2) 
+	{
+		searchnode = pGraph->vertsP2->head;
+		while(searchnode)
+		{
+			castData = searchnode->data;
+			if(search(castData->edgeList,&tarVertId,numComp) == 1)
+			return EXISTING_EDGE;
+
+			if(castData->vertId == srcVertId)
+			{
+				newData = malloc(sizeof(struct edgedata));
+				newData->tarVertId = tarVertId;
+				newData->srcVertId = srcVertId; 
+				add_node(castData->edgeList,newData);
+				return NEW_EDGE;
+			} 
+		} 
+	} 
+
+	return ERROR_VALUE;
 } /* end of bipartGraphInsertEdge() */
 
 
 int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 {
 	/* TODO: Implement me! */
+
 
 	/* TODO: Replace placeholder. */
 	return 0;
@@ -116,5 +215,6 @@ int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcP
 void bipartGraphPrint(bpGraph_t *pGraph)
 {
 	/* TODO: Implement me! */
+	return;
 } /* end of bipartGraphPrint() */
 
