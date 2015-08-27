@@ -55,7 +55,14 @@ BOOLEAN add_node(struct list * list,void * data)
 
 BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list, void (*func)(void * data))
 {
-	
+	if(removeNode == list->head) 
+	{
+		list->head = removeNode->next;
+		func(removeNode->data);
+		free(removeNode);
+		list->count--;
+	} 
+
 	prevNode->next = removeNode->next;
 	func(removeNode->data);
 	free(removeNode);
@@ -118,7 +125,7 @@ int search(struct list * list, void * comparator, int (*func)(struct node * node
 struct node * find(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
 {
 	struct node * searchnode;
-	searchnode = searchnode->next;
+	searchnode = list->head;
 
 	while(searchnode)
 	{

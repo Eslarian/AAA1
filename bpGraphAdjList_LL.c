@@ -183,6 +183,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 				add_node(castData->edgeList,newData);
 				return NEW_EDGE;
 			} 
+			searchnode = searchnode->next;
 		}
 	} 
 	else if(srcPartite == 2) 
@@ -205,6 +206,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 				add_node(castData->edgeList,newData);
 				return NEW_EDGE;
 			} 
+			searchnode = searchnode->next;
 		} 
 	} 
 
@@ -217,6 +219,8 @@ int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 	/* TODO: Implement me! */
 	struct node * delNode = NULL;
 	struct node * prevNode = NULL;
+	struct node * searchnode = NULL;
+	int i;
 
 	if(partite == 1)
 	{	
@@ -224,7 +228,12 @@ int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 		if(delNode == NULL)
 			return NOT_FOUND;
 		
-		vertId--;
+		searchnode = graph->vertsP1->head;
+		for(i = 0; i < graph->vertsP1->count;i++)
+		{
+			/*FIXME FIXME FIXME I am so broken*/
+			if(
+			
 		prevNode = find(graph->vertsP1,&vertId,numComp);
 		remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
 		return SUCCESS;
