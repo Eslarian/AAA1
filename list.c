@@ -53,11 +53,11 @@ BOOLEAN add_node(struct list * list,void * data)
 
 } 
 
-BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list)
+BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list, void (*func)(void * data))
 {
 	
 	prevNode->next = removeNode->next;
-	free(removeNode->data);
+	func(removeNode->data);
 	free(removeNode);
 	list->count--;
 
@@ -65,7 +65,7 @@ BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list
 
 }
 
-void free_list(struct list * list)
+void free_list(struct list * list, void (*func)(void * data))
 {
 	struct node * curr = NULL;
 	struct node * next = NULL;
@@ -77,19 +77,14 @@ void free_list(struct list * list)
 	while(!curr)
 	{
 		next = curr->next;
-		free_edgelist(curr->data);
+		func(curr->data);
 		free(curr);
 		curr = next;
 	} 
 } 
 
-/*Initially, this function didn't exist as part of my generic implementation. 
-My free function wasn't prepared for data that contains a linkedlist, and I 
-presume there are also other types of data that I won't be able to safely 
-"free" without memory leaks. In future, to completely make this linked list 
-implementation generic, it would require more function pointers for each function*/
 
-void free_edgelist(struct list * list)
+void free_linkedlist(struct list * list)
 {
 	struct node * curr = NULL;
 	struct node * next = NULL;
@@ -113,7 +108,7 @@ int search(struct list * list, void * comparator, int (*func)(struct node * node
 	{
 		if((result=func(searchnode,comparator)) == 0)
 			break;
-		searchnode=searchnode->next;
+		searchnode = searchnode->next;
 
 	} 
 	
@@ -123,9 +118,15 @@ int search(struct list * list, void * comparator, int (*func)(struct node * node
 struct node * find(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
 {
 	struct node * searchnode;
-	searchnode=searchnode->next;
+	searchnode = searchnode->next;
 
 	while(searchnode)
 	{
 		if(func(searchnode,comparator) == 0) 
-		return searchnode
+			return searchnode;
+		searchnode = searchnode->next;
+	} 
+
+	return NULL;
+
+} 

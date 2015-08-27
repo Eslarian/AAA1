@@ -12,6 +12,7 @@
 #include "commonDefs.h"
 #define INVALID_COMP 3
 
+/*Data structures*/
 struct implBipartGraph_t
 {
 	int vertNumP1;
@@ -34,6 +35,7 @@ struct edgeData
 	int srcVertId;
 }; 
 
+/*Function implementations*/
 int numComp(struct node * vertNode, void * val)
 {
 	struct vertData * vData;
@@ -58,7 +60,13 @@ int numComp(struct node * vertNode, void * val)
 
 } 
 
+void free_vertData(void * data)
+{
+	struct vertData * castData = data;
 
+	free_linkedlist(castData->edgeList);
+	free(castData);
+} 
 /* ************************************************************************* */
 /* Function implementations */
 
@@ -96,8 +104,8 @@ void bipartGraphDestroy(bpGraph_t* pGraph)
 	
 	/*FIXME this needs refactoring so that it actually frees properly*/
 	
-	free_list(pGraph->vertsP1);
-	free_list(pGraph->vertsP2);
+	free_list(pGraph->vertsP1, free_vertData);
+	free_list(pGraph->vertsP2, free_vertData);
 	safeFree(pGraph, sizeof(bpGraph_t));
 	
 
@@ -207,12 +215,34 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 {
 	/* TODO: Implement me! */
-	if(partite == 1)
-	{
-		
+	struct node * delNode = NULL;
+	struct node * prevNode = NULL;
 
-	/* TODO: Replace placeholder. */
-	return 0;
+	if(partite == 1)
+	{	
+		delNode = find(graph->vertsP1,&vertId,numComp);
+		if(delNode == NULL)
+			return NOT_FOUND;
+		
+		vertId--;
+		prevNode = find(graph->vertsP1,&vertId,numComp);
+		remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
+		return SUCCESS;
+	}
+	else if(partite == 2)
+	{
+		delNode = find(graph->vertsP2,&vertId,numComp);
+		if(delNode == NULL)
+			return NOT_FOUND;
+		
+		vertId--;
+		prevNode = find(graph->vertsP2,&vertId,numComp);
+		remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
+		return SUCCESS;
+	} 
+
+	
+	return ERROR_VALUE;
 } /* end of bipartGraphDeleteVertex() */
 
 
@@ -245,7 +275,7 @@ int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcP
 
 void bipartGraphPrint(bpGraph_t *pGraph)
 {
-	/* TODO: Implement me! */
-	return;
+	printf("Hello world\n");
+
 } /* end of bipartGraphPrint() */
 
