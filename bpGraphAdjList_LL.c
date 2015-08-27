@@ -10,6 +10,7 @@
 #include "memoryUtil.h"
 #include "list.h"
 #include "commonDefs.h"
+#include <stdlib.h>
 #define INVALID_COMP 3
 
 /*Data structures*/
@@ -35,7 +36,7 @@ struct edgeData
 	int srcVertId;
 }; 
 
-/*Function implementations*/
+/*Function implementations for generics use*/
 int numComp(struct node * vertNode, void * val)
 {
 	struct vertData * vData;
@@ -102,8 +103,6 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 void bipartGraphDestroy(bpGraph_t* pGraph)
 {
 	
-	/*FIXME this needs refactoring so that it actually frees properly*/
-	
 	free_list(pGraph->vertsP1, free_vertData);
 	free_list(pGraph->vertsP2, free_vertData);
 	safeFree(pGraph, sizeof(bpGraph_t));
@@ -159,6 +158,8 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 
 int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int srcPartite)
 {
+
+	/*FIXME Something is seriously wrong and I don't know what*/
 	struct node * searchnode = NULL;
 	struct vertData * castData = NULL;
 	struct edgeData * newData = NULL;
@@ -225,29 +226,56 @@ int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 	if(partite == 1)
 	{	
 		delNode = find(graph->vertsP1,&vertId,numComp);
+		
 		if(delNode == NULL)
 			return NOT_FOUND;
-		
+
+		if(delNode == graph->vertsP1->head)
+		{
+			graph->vertsP1->head == delNode->next;
+			prevNode = NULL;
+			remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
+		} 
+			
 		searchnode = graph->vertsP1->head;
 		for(i = 0; i < graph->vertsP1->count;i++)
 		{
-			/*FIXME FIXME FIXME I am so broken*/
-			if(
+			prevNode = searchnode;
+			searchnode = prevNode->next;
+			if(searchnode == delNode)
+			{
+				remove_node(prevNode,searchnode,graph->vertsP1,free);
+				return SUCCESS;
+			} 
+		}
 			
-		prevNode = find(graph->vertsP1,&vertId,numComp);
-		remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
-		return SUCCESS;
+				
 	}
 	else if(partite == 2)
 	{
 		delNode = find(graph->vertsP2,&vertId,numComp);
+		
 		if(delNode == NULL)
 			return NOT_FOUND;
-		
-		vertId--;
-		prevNode = find(graph->vertsP2,&vertId,numComp);
-		remove_node(prevNode,delNode,graph->vertsP1,free_vertData);
-		return SUCCESS;
+
+		if(delNode == graph->vertsP2->head)
+		{
+			graph->vertsP1->head == delNode->next;
+			prevNode = NULL;
+			remove_node(prevNode,delNode,graph->vertsP1,free_vertData);		} 
+			
+		searchnode = graph->vertsP2->head;
+		for(i = 0; i < graph->vertsP2->count;i++)
+		{
+			prevNode = searchnode;
+			searchnode = prevNode->next;
+			if(searchnode == delNode)
+			{
+				remove_node(prevNode,searchnode,graph->vertsP2,free);
+				return SUCCESS;
+			} 
+		}
+
 	} 
 
 	

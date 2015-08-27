@@ -55,15 +55,9 @@ BOOLEAN add_node(struct list * list,void * data)
 
 BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list, void (*func)(void * data))
 {
-	if(removeNode == list->head) 
-	{
-		list->head = removeNode->next;
-		func(removeNode->data);
-		free(removeNode);
-		list->count--;
-	} 
-
+	if(prevNode)
 	prevNode->next = removeNode->next;
+	
 	func(removeNode->data);
 	free(removeNode);
 	list->count--;
@@ -76,8 +70,6 @@ void free_list(struct list * list, void (*func)(void * data))
 {
 	struct node * curr = NULL;
 	struct node * next = NULL;
-	struct node * edgeCurr = NULL;
-	struct node * edgeNext = NULL; 
 
 	curr = list->head;
 	
@@ -95,6 +87,8 @@ void free_linkedlist(struct list * list)
 {
 	struct node * curr = NULL;
 	struct node * next = NULL;
+
+	curr = list->head;
 
 	while(!curr)
 	{
