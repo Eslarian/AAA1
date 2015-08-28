@@ -112,6 +112,8 @@ void bipartGraphDestroy(bpGraph_t* pGraph)
 int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 {
 	int i;
+	linkedList_t **pTemp;
+	char *pTemp2;
 
 	/* insert into partite 1 */
 	if (partite == 1) {
@@ -121,15 +123,18 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 				return EXISTING_VERTEX;
 			}
 			else {
+				if (pGraph->vpVertsP1[vertId] == NULL) {
+					pGraph->vpVertsP1[vertId] = createList();
+				}
 				pGraph->vVertExistP1[vertId] = 1;
 				return NEW_VERTEX
 			}
 		}
 		else {
 			/* must be a new vertex, so we need to allocate more space */
-			linkedList_t **pTemp = (linkedList_t**) safeRealloc(pGraph->vpVertsP1, (vertId+1) * sizeof(linkedList_t*), (vertId+1-pGraph->vertNum1) * sizeof(linkedList_t*));
+			pTemp = (linkedList_t**) safeRealloc(pGraph->vpVertsP1, (vertId+1) * sizeof(linkedList_t*), (vertId+1-pGraph->vertNum1) * sizeof(linkedList_t*));
 			pGraph->vpVertsP1 = pTemp;
-			char *pTemp2 = (char*) safeRealloc(pGraph->vVertExistP1, (vertId+1) * sizeof(char), (vertId+1-pGraph->vertNum1) * sizeof(char));
+			pTemp2 = (char*) safeRealloc(pGraph->vVertExistP1, (vertId+1) * sizeof(char), (vertId+1-pGraph->vertNum1) * sizeof(char));
 			pGraph->vVertExistP1 = pTemp2;
 			/* initialise all new elements to NULL */
 			for (i = pGraph->vertNum1; i < vertId+1; ++i) {
@@ -151,15 +156,18 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 				return EXISTING_VERTEX;
 			}
 			else {
+				if (pGraph->vpVertsP2[vertId] == NULL) {
+					pGraph->vpVertsP2[vertId] = createList();
+				}
 				pGraph->vVertExistP2[vertId] = 1;
 				return NEW_VERTEX
 			}
 		}
 		else {
 			/* must be a new vertex, so we need to allocate more space */
-			linkedList_t **pTemp = (linkedList_t**) safeRealloc(pGraph->vpVertsP2, (vertId+1) * sizeof(linkedList_t*), (vertId+1-pGraph->vertNum2) * sizeof(linkedList_t*));
+			pTemp = (linkedList_t**) safeRealloc(pGraph->vpVertsP2, (vertId+1) * sizeof(linkedList_t*), (vertId+1-pGraph->vertNum2) * sizeof(linkedList_t*));
 			pGraph->vpVertsP2 = pTemp;
-			char *pTemp2 = (char*) safeRealloc(pGraph->vVertExistP2, (vertId+1) * sizeof(char), (vertId+1-pGraph->vertNum2) * sizeof(char));
+			pTemp2 = (char*) safeRealloc(pGraph->vVertExistP2, (vertId+1) * sizeof(char), (vertId+1-pGraph->vertNum2) * sizeof(char));
 			pGraph->vVertExistP2 = pTemp2;
 			/* initialise all new elements to NULL */
 			for (i = pGraph->vertNum2; i < vertId+1; ++i) {
@@ -271,7 +279,7 @@ int bipartGraphDeleteEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 		/* delete linked list node */
 		errorStatus = deleteNode(pGraph->vpVertsP1[srcVertId], tarVertId);
 
-		if (errorStatus > 0) {
+		if (!errorStatus) {
 			return NOT_FOUND;
 		}
 

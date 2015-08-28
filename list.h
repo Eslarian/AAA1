@@ -35,3 +35,4 @@ BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list
 void free_list(struct list * list, void (*func)(void * data));
 void free_linkedlist(struct list * list);
 int search(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator));
+struct node * find(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator));

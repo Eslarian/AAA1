@@ -73,7 +73,7 @@ void free_list(struct list * list, void (*func)(void * data))
 
 	curr = list->head;
 	
-	while(!curr)
+	while(curr != NULL)
 	{
 		next = curr->next;
 		func(curr->data);
@@ -90,7 +90,7 @@ void free_linkedlist(struct list * list)
 
 	curr = list->head;
 
-	while(!curr)
+	while(curr != NULL)
 	{
 		next = curr->next;
 		free(curr->data);
