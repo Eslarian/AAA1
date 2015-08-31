@@ -23,7 +23,6 @@
 
 struct implBipartGraph_t
 {
-	/* TODO: Implement me! */
 	binTreeNode_t * vertsP1root;
 	binTreeNode_t * vertsP2root;
 };
@@ -84,7 +83,6 @@ int edgeComp(struct node * edgeNode,void * val)
 
 bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
-	/* TODO: Implement me! */
 	int i;
 	struct list * edgeList = NULL;
 	binTreeNode_t * newNode = NULL;
@@ -122,7 +120,6 @@ void bipartGraphDestroy(bpGraph_t* pGraph)
 
 int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 {
-	/* TODO: Implement me! */
 	binTreeNode_t * newNode = NULL;
 	struct list * newList = NULL;
 
@@ -388,7 +385,6 @@ int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcP
 
 void bipartGraphPrint(bpGraph_t *pGraph)
 {
-	/* TODO: Implement me! */
 	printf("Vertices:\n");
 	printf("Part 1\n"); 
 	printTree(pGraph->vertsP1root);
