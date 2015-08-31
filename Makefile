@@ -14,7 +14,7 @@ TARGET_AM = bpGraphAdjMat
 
 SRC_AL_AL = main.c memoryUtil.c linkedList.c bpGraphAdjList_AL.c
 SRC_AL_LL = main.c memoryUtil.c list.c bpGraphAdjList_LL.c
-SRC_AL_BL = main.c memoryUtil.c linkedList.c binaryTree.c bpGraphAdjList_BL.c
+SRC_AL_BL = main.c memoryUtil.c list.c binaryTree.c bpGraphAdjList_BL.c
 #SRC_AL_BT = testMain.c memoryUtil.c linkedList.c binaryTree.c bpGraphAdjList_BT.c
 SRC_AM = main.c memoryUtil.c linkedList.c bpGraphAdjMat_AA.c
 HDR = memoryUtil.h linkedList.h binaryTree.h bipartiteGraph.h commonDefs.h 

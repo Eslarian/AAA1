@@ -38,13 +38,13 @@ binTreeNode_t* createTreeNode(int key, void *value);
 /* 
  * Destroy a tree.
  */
-void destroyTree(binTreeNode_t *tree);
+void destroyTree(binTreeNode_t * root);
 
 
 /* 
  * Destroy a node
  */
-void destroyTreeNode(binTreeNode_t *node);
+void destroyTreeNode(binTreeNode_t *pNode);
 
 
 /*
@@ -57,23 +57,26 @@ int insertTreeNode(binTreeNode_t *pTree, binTreeNode_t *pNewNode);
 /*
  * Delete the first node found with value.
  */
-int deleteKey(binTreeNode_t **ppTree, int key);
+void deleteTreeNode(binTreeNode_t **ppTree, binTreeNode_t *pDelNode, binTreeNode_t *pDelParent, int bleftChild);
+
+
+/*
+ * Find node with key, and also return by reference that node's parent and whether it is a left or right child of the parent node.
+ */
+binTreeNode_t* searchDeleteNode(binTreeNode_t *pTree, int key, binTreeNode_t **pParent, int *pLeftChild);
+
+/*Find node with key*/
+binTreeNode_t * searchTree(binTreeNode_t * root,int key);
+/*
+ * Display the tree using preorder traversal.
+ */
+void printTree(binTreeNode_t *ppTree);
 
 
 
 
 
 
-
-/* TODO: Please implement. */
-void* allocateValueMemory();
-
-/* TODO: Please implement. */
-void freeValueMemory(void *value);
-
-
-
+/* TODO: Please implement if using the above tree structure and code. */
 
 #endif
-
-

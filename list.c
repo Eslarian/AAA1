@@ -82,23 +82,6 @@ void free_list(struct list * list, void (*func)(void * data))
 	} 
 } 
 
-
-void free_linkedlist(struct list * list)
-{
-	struct node * curr = NULL;
-	struct node * next = NULL;
-
-	curr = list->head;
-
-	while(curr != NULL)
-	{
-		next = curr->next;
-		free(curr->data);
-		free(curr);
-		curr = next;
-	} 
-
-} 
 int search(struct list * list, void * comparator, int (*func)(struct node * node, void * comparator))
 {
 	struct node * searchnode;

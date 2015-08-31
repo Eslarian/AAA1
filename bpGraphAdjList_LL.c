@@ -64,12 +64,37 @@ int numComp(struct node * vertNode, void * val)
 
 } 
 
+int edgeComp(struct node * edgeNode,void * val)
+{
+	struct edgeData * eData;
+	int * num;
+
+	num = val;
+	eData = edgeNode->data;
+	if(eData->tarVertId > *num)
+	{	
+		return 1;
+	} 
+	if(eData->tarVertId < *num)
+	{
+		return -1;
+	} 
+	if(eData->tarVertId == *num) 
+	{
+		return 0;
+	}
+	
+	return INVALID_COMP;
+
+} 
+	
+	
 /*Free function for freeing the data in the vertices list*/
 void free_vertData(void * data)
 {
 	struct vertData * castData = data;
 
-	free_linkedlist(castData->edgeList);
+	free_list(castData->edgeList,free);
 	free(castData);
 } 
 /* ************************************************************************* */
@@ -175,7 +200,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 		{
 			castData = searchnode->data;
 			/*Checking if the edge exists already*/
-			if(search(castData->edgeList,&tarVertId,numComp) == 0)
+			if(search(castData->edgeList,&tarVertId,edgeComp) == 0)
 			return EXISTING_EDGE; 		
 			
 			if(castData->vertId == srcVertId) 
@@ -198,7 +223,7 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 		{
 			castData = searchnode->data;
 			/*Checking if the edge exists already*/
-			if(search(castData->edgeList,&tarVertId,numComp) == 0)
+			if(search(castData->edgeList,&tarVertId,edgeComp) == 0)
 			return EXISTING_EDGE;
 
 			if(castData->vertId == srcVertId)
@@ -291,7 +316,6 @@ int bipartGraphDeleteVertex(bpGraph_t* graph, int vertId, int partite)
 
 int bipartGraphDeleteEdge(bpGraph_t* pGraph,  int srcVertId, int tarVertId, int srcPartite)
 {
-	/* TODO: Implement me! */
 	struct node * searchnode = NULL;
 	struct node * searchedge = NULL;
 	struct node * delNode = NULL;
@@ -305,7 +329,7 @@ int bipartGraphDeleteEdge(bpGraph_t* pGraph,  int srcVertId, int tarVertId, int 
 		while(searchnode)
 		{
 			castData = searchnode->data;
-			if((delNode = find(castData->edgeList,&tarVertId,numComp)) != NULL)
+			if((delNode = find(castData->edgeList,&tarVertId,edgeComp)) != NULL)
 				break;
 			searchnode = searchnode->next;
 		} 			
@@ -342,7 +366,7 @@ int bipartGraphDeleteEdge(bpGraph_t* pGraph,  int srcVertId, int tarVertId, int 
 		while(searchnode)
 		{
 			castData = searchnode->data;
-			if((delNode = find(castData->edgeList,&tarVertId,numComp)) != NULL)
+			if((delNode = find(castData->edgeList,&tarVertId,edgeComp)) != NULL)
 				break;
 			searchnode = searchnode->next;
 		} 			
@@ -414,7 +438,7 @@ int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcP
 		{
 			castData = searchnode->data;
 			
-			if(search(castData->edgeList,&tarVertId,numComp) == 0)
+			if(search(castData->edgeList,&tarVertId,edgeComp) == 0)
 			return FOUND;
 		}
 
@@ -426,7 +450,7 @@ int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcP
 		{
 			castData = searchnode->data;
 
-			if(search(castData->edgeList,&tarVertId,numComp) == 0)
+			if(search(castData->edgeList,&tarVertId,edgeComp) == 0)
 			return FOUND;
 		}
 		
@@ -467,7 +491,7 @@ void bipartGraphPrint(bpGraph_t *pGraph)
 	} 
 	printf("\n");
 	
-	printf("Edges\n");
+	printf("Edges:\n");
 	printf("Part 1 to 2\n");
 	
 	searchnode = pGraph->vertsP1->head;
