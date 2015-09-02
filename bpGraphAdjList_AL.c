@@ -127,7 +127,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 					pGraph->vpVertsP1[vertId] = createList();
 				}
 				pGraph->vVertExistP1[vertId] = 1;
-				return NEW_VERTEX
+				return NEW_VERTEX;
 			}
 		}
 		else {
@@ -160,7 +160,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 					pGraph->vpVertsP2[vertId] = createList();
 				}
 				pGraph->vVertExistP2[vertId] = 1;
-				return NEW_VERTEX
+				return NEW_VERTEX;
 			}
 		}
 		else {

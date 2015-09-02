@@ -352,7 +352,6 @@ int bipartGraphFindVertex(bpGraph_t *pGraph, int vertId, int partite)
 
 int bipartGraphFindEdge(bpGraph_t* graph, int srcVertId, int tarVertId, int srcPartite)
 {
-	/** TODO: Implement me! */
 	binTreeNode_t * vertex;
 
 
