@@ -84,8 +84,6 @@ int edgeComp(struct node * edgeNode,void * val)
 bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 {
 	int i;
-	struct list * edgeList = NULL;
-	binTreeNode_t * newNode = NULL;
 	bpGraph_t * graph = safeMalloc(sizeof(bpGraph_t));
 
 	graph->vertsP1root =  NULL;
@@ -94,18 +92,13 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 
 	for(i = 0; i < part1VertNum;i++)
 	{
-			edgeList = init_list();
-			newNode = createTreeNode(i,edgeList);
-			insertTreeNode(graph->vertsP1root,newNode);
+		bipartGraphInsertVertex(graph,i,1);		
 	} 
 			
 	for(i = 0;i < part2VertNum;i++)
 	{
-		edgeList = init_list();
-		newNode = createTreeNode(i,edgeList);
-		insertTreeNode(graph->vertsP2root,newNode);
+		bipartGraphInsertVertex(graph,i,2);		
 	} 
-
 	return graph;
 } /* end of bipartGraphCreate() */
 
@@ -125,6 +118,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 
 	if(partite == 1)
 	{
+		
 		if(searchTree(pGraph->vertsP1root,vertId) != NULL)
 		{
 				return EXISTING_VERTEX;
@@ -179,6 +173,10 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 
 	if(srcPartite == 1)
 	{
+		if(searchTree(pGraph->vertsP2root,tarVertId) == NULL)
+		{
+			return ERROR_VALUE;
+		} 
 		srcNode = searchTree(pGraph->vertsP1root,srcVertId);
 		if(srcNode)
 		{
@@ -200,6 +198,10 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 	} 
 	else if(srcPartite == 2)
 	{
+		if(searchTree(pGraph->vertsP1root,tarVertId) == NULL)
+		{
+			return ERROR_VALUE;
+		}
 		srcNode = searchTree(pGraph->vertsP2root,srcVertId);
 		if(srcNode)
 		{

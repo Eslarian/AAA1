@@ -194,6 +194,12 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 
 	if(srcPartite == 1)
 	{
+		/*Check if the target vertex exists*/
+		if(search(pGraph->vertsP2,&tarVertId,numComp) != 0)
+		{	
+			return ERROR_VALUE;
+		} 
+		
 		searchnode = pGraph->vertsP1->head;
 		/*Searching through the vertex list to find where to insert the edge node, or if the edge exists already*/
 		while(searchnode)
@@ -217,6 +223,11 @@ int bipartGraphInsertEdge(bpGraph_t* pGraph, int srcVertId, int tarVertId, int s
 	} 
 	else if(srcPartite == 2) 
 	{
+		/*Check if the target vertex exists*/
+		if(search(pGraph->vertsP1,&tarVertId,numComp) != 0)
+		{	
+			return ERROR_VALUE;
+		} 
 		searchnode = pGraph->vertsP2->head;
 		/*Searching through the vertex list to find where to insert the edge node, or if the edge exists already*/
 		while(searchnode)
