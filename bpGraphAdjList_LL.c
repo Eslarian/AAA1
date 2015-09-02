@@ -158,7 +158,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 			newData->vertId = vertId;
 			newData->edgeList = init_list(); 
 			add_node(pGraph->vertsP1,newData);
-			return NEW_VERTEX
+			return NEW_VERTEX;
 
 		} 
 	} 

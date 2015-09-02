@@ -19,6 +19,8 @@ struct implBipartGraph_t
 {
 	/* TODO: Implement me! */
 	int p1Verts, p2Verts;
+	char *vVertExistP1;
+	char *vVertExistP2;
 	char ** p1matrix;
 	char ** p2matrix;
 };
@@ -35,43 +37,34 @@ bpGraph_t* bipartGraphCreate(int part1VertNum, int part2VertNum)
 	int i;
 	bpGraph_t * graph  = safeMalloc(sizeof(bpGraph_t));
 	
-	if(part1VertNum == 0)
-		graph->p1Verts = part1VertNum-1;
-	else
-		graph->p1Verts = part1VertNum;
-	if(part2VertNum == 0)
-		graph->p2Verts = part2VertNum-1;
-	else
-		graph->p2Verts = part2VertNum;
-
-	if(part1VertNum != 0)
+	
+	pGraph->p1Verts = part1VertNum;
+	pGraph->p2Verts = part2VertNum;
+	pGraph->vVertExistP1 = (char *) safeMalloc(p1Verts * sizeof(char));
+	for (i = 0; i < pGraph->p1Verts; ++i) 
 	{
-		graph->p1matrix = safeMalloc(part1VertNum * sizeof(char*));
-		for(i = 0; i < part1VertNum; i++)
-		{
-			graph->p1matrix[i] = safeMalloc(part2VertNum * sizeof(char));
-		} 
-	} 
+		pGraph->vVertExistP1[i] = 1;
+	}
 
-	if(part2VertNum != 0)
+	pGraph->vVertExistP2 = (char *) safeMalloc(p2Verts * sizeof(char));
+	for (i = 0; i < pGraph->vertNum2; ++i) 
 	{
+		pGraph->vVertExistP2[i] = 1;
+	}
 
-		graph->p2matrix = safeMalloc(part2VertNum * sizeof(char*));
-		for(i = 0; i < part1VertNum; i++)
-		{
-			graph->p2matrix[i] = safeMalloc(part1VertNum * sizeof(char));
-		} 
-	} 
 
+	graph->p1matrix = safeMalloc(part1VertNum * sizeof(char*));
 	for(i = 0; i < part1VertNum; i++)
 	{
-		graph->p1matrix[i][0] = '1';
-	}	
-	for(i = 0; i < part2VertNum; i++)
-	{
-		graph->p2matrix[i][0] = '1';
+		graph->p1matrix[i] = safeMalloc(part2VertNum * sizeof(char));
 	} 
-	
+	 
+
+	graph->p2matrix = safeMalloc(part2VertNum * sizeof(char*));
+	for(i = 0; i < part1VertNum; i++)
+	{
+		graph->p2matrix[i] = safeMalloc(part1VertNum * sizeof(char));
+	} 
 
 	return graph;
 } /* end of bipartGraphDestroy() */
@@ -82,6 +75,8 @@ void bipartGraphDestroy(bpGraph_t* pGraph)
 	/* TODO: Implement me! */
 	safeFree(pGraph->p1matrix,sizeof(char **)*pGraph->p1Verts);
 	safeFree(pGraph->p2matrix,sizeof(char **)*pGraph->p2Verts);
+	safeFree(pGraph->vVertExistP1,sizeof(char) * pGraph->p1Verts)
+	safeFree(pGraph->vVertExistP2,sizeof(char) * pGraph->p2Verts)
 	safeFree(pGraph,sizeof(bpGraph_t));
 
 } /* end of bipartGraphDestroy() */
@@ -101,7 +96,7 @@ int bipartGraphInsertVertex(bpGraph_t* pGraph, int vertId, int partite)
 				pGraph->p1matrix = realloc(pGraph->p1matrix,sizeof(char*));
 				for(i = 0; i < 1; i++)
 				{
-					pGraph->p1matrix[i] = realloc(pGraph->p1matrix[i],sizeof(char) * pGraph->p2Verts);
+					pGraph->p1matrix[i] = realloc(pGraph->p1matrix[i],sizeof(char) * 1);
 				} 
 
 				pGraph->p1matrix[0][0] = 1;
