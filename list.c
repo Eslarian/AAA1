@@ -53,6 +53,45 @@ BOOLEAN add_node(struct list * list,void * data)
 
 } 
 
+BOOLEAN add_node_sorted(struct list * list, void * data, int (*func)(void * newData, void * currData))
+{
+	struct node * newNode = malloc(sizeof(struct node));
+	struct node * searchNode = NULL;
+	struct node * prev = NULL;
+
+	newNode->next = NULL;
+	newNode->data = data;
+
+	if(list->head == NULL)
+	{
+		list->head = newNode;
+		list->count++;
+		return TRUE;
+	}else
+	{ 
+		searchNode = list->head;
+		while(searchode != NULL) 
+		{
+			prev = searchNode;
+			searchNode = searchNode->next;
+			if(func(data,searchNode->data) == 1)
+			{
+				newNode->next = prev->next;
+				prev->next = newNode;
+				list->count++;
+				return TRUE;
+			} 
+		} 
+		searchNode->next = newNode;
+		list->count++;
+		return TRUE;
+	} 
+
+	return FALSE;
+	
+} 
+
+
 BOOLEAN remove_node(struct node *  prevNode,struct node * removeNode,struct list * list, void (*func)(void * data))
 {
 	if(prevNode)
